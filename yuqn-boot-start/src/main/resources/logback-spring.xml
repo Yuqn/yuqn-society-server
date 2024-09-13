@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="FILE_LOG_PATTERN"
+              value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <springProperty scope="context" name="application.name" source="spring.application.name" defaultValue="javadog"/>
+    <springProperty scope="context" name="logging.path" source="logging.file.path" defaultValue="logs"/>
+    <springProperty scope="context" name="logging.file.max-size" source="logging.logback.rollingpolicy.max-size"
+                    defaultValue="10MB"/>
+    <springProperty scope="context" name="logging.file.max-history" source="logging.logback.rollingpolicy.max-history"
+                    defaultValue="30"/>
+    <contextName>${application.name}</contextName>
+
+    <springProfile name="dev,prod,test">
+        <!--输出到控制台-->
+        <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="console"/>
+        </root>
+    </springProfile>
+
+    <!-- 多环境下，复制多个 springProfile 标签，并且设置 name 为对应的属性，然后修改配置内容 -->
+    <springProfile name="dev,test,prod">
+        <!-- info日志文件保存设置 -->
+        <appender name="file-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <!-- info日志文件保存地址，达到 maxHistory 时间后，更改为 fileNamePattern 文件名，并且重新创建 file 文件 -->
+            <file>${logging.path}/info/yuqnboot-info.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!-- 用于集合周期时间的日志 -->
+                <fileNamePattern>${logging.path}/info/yuqnboot-info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>${logging.file.max-size}</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <!--只保留最近n天的日志-->
+                <maxHistory>${logging.file.max-history}</maxHistory>
+            </rollingPolicy>
+            <!-- 追加方式记录日志 -->
+            <append>true</append>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <!-- warn日志文件保存设置 -->
+        <appender name="file-warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>warn</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <!-- warn日志文件保存地址，达到 maxHistory 时间后，更改为 fileNamePattern 文件名，并且重新创建 file 文件 -->
+            <file>${logging.path}/warn/yuqnboot-warn.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${logging.path}$/warn/yuqnboot-warn.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>${logging.file.max-size}</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <!--只保留最近n天的日志-->
+                <maxHistory>${logging.file.max-history}</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+        <!-- error日志文件保存设置 -->
+        <appender name="file-error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <filter class="ch.qos.logback.classic.filter.LevelFilter">
+                <level>error</level>
+                <onMatch>ACCEPT</onMatch>
+                <onMismatch>DENY</onMismatch>
+            </filter>
+            <file>${logging.path}/error/yuqnboot-error.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${logging.path}/error/yuqnboot-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <maxFileSize>${logging.file.max-size}</maxFileSize>
+                </timeBasedFileNamingAndTriggeringPolicy>
+                <!--只保留最近n天的日志-->
+                <maxHistory>${logging.file.max-history}</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="file-info"/>
+            <appender-ref ref="file-warn"/>
+            <appender-ref ref="file-error"/>
+        </root>
+    </springProfile>
+</configuration>

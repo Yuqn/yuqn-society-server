@@ -1,0 +1,6 @@
+server:
+  port: 82
+spring:
+  profiles:
+    # 配置动态加载环境配置文件
+    active: @spring.active@
