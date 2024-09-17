@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.RoleEnum;
+import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,17 +36,17 @@ public class SysRole implements Serializable {
     /**
      * 角色权限字符串
      */
-    private String roleKey;
+    private RoleEnum roleKey;
 
     /**
      * 角色状态（0正常 1停用）
      */
-    private String status;
+    private StatusEnum status;
 
     /**
      * del_flag
      */
-    private Integer delFlag;
+    private DelFalgEnum delFlag;
 
     /**
      *

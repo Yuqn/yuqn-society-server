@@ -1,6 +1,8 @@
 package com.yuqn.controller.society;
 
 import com.yuqn.dao.society.SocietyAdminMapper;
+import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.StatusEnum;
 import com.yuqn.service.society.SocietyAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +29,9 @@ public class SocietyAdmin {
         societyAdmin.setNumber("123456");
         societyAdmin.setUsername("老师");
         societyAdmin.setPassword("123456");
+        societyAdmin.setStatus(StatusEnum.ENABLE);
+        societyAdmin.setDelFlag(DelFalgEnum.NOTDEL);
+        System.out.println("societyAdminsocietyAdminsocietyAdminsocietyAdmin"+societyAdmin);
         int save = societyAdminMapper.insert(societyAdmin);
         if (save != 1){
             return "新增失败";

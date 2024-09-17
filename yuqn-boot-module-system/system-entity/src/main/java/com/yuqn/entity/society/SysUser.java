@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,7 +45,7 @@ public class SysUser implements Serializable {
     /**
      * 账号状态（0正常 1停用）
      */
-    private String status;
+    private StatusEnum status;
 
     /**
      * 邮箱
@@ -95,7 +97,7 @@ public class SysUser implements Serializable {
     /**
      * 删除标志（0代表未删除，1代表已删除）
      */
-    private Integer delFlag;
+    private DelFalgEnum delFlag;
 
     /**
      * 角色，用于验证activiti权限

@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,12 +45,12 @@ public class SocietyBodyUserRole implements Serializable {
     /**
      *
      */
-    private String status;
+    private StatusEnum status;
 
     /**
      *
      */
-    private String delFlag;
+    private DelFalgEnum delFlag;
 
     /**
      *

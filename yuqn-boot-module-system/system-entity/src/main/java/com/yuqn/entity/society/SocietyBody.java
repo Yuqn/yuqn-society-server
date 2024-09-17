@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.StatusEnum;
+import com.yuqn.enums.TypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,17 +41,17 @@ public class SocietyBody implements Serializable {
     /**
      * 社团创建类型（0教师创建 1社联创建 2学生创建）
      */
-    private String type;
+    private TypeEnum type;
 
     /**
      * 角色状态（0正常 1停用）
      */
-    private String status;
+    private StatusEnum status;
 
     /**
      * del_flag
      */
-    private Integer delFlag;
+    private DelFalgEnum delFlag;
 
     /**
      *

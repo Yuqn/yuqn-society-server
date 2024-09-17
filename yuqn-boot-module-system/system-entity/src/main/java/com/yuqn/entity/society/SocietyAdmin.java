@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,12 +49,12 @@ public class SocietyAdmin implements Serializable {
     /**
      * 角色状态（0正常 1停用）
      */
-    private String status;
+    private StatusEnum status;
 
     /**
      * del_flag
      */
-    private Integer delFlag;
+    private DelFalgEnum delFlag;
 
     /**
      *
@@ -127,4 +128,6 @@ public class SocietyAdmin implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
+
 }
