@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.SexEnum;
 import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -60,7 +61,7 @@ public class SysUser implements Serializable {
     /**
      * 用户性别（0男，1女，2未知）
      */
-    private String sex;
+    private SexEnum sex;
 
     /**
      * 头像

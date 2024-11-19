@@ -1,7 +1,12 @@
 package com.yuqn.controller.society;
 
 import com.yuqn.vo.Result;
+import com.yuqn.vo.SocietyUserVo;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +29,9 @@ public class StudentController {
      * @param: null
      * @return: null
      */
-    public Result addStudent(){
+    @PostMapping("/add")
+    @Operation(summary = "新用户注册")
+    public Result addStudent(@RequestBody SocietyUserVo societyUserVo){
         return Result.OK();
     }
 }
