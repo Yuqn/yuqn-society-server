@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.yuqn.enums.DelFalgEnum;
+import com.yuqn.enums.IdentityEnum;
 import com.yuqn.enums.SexEnum;
 import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
@@ -105,6 +106,11 @@ public class SysUser implements Serializable {
      */
     private String roles;
 
+    /**
+     * 用户类型，（0：学生、1：教师）（用于区分身份，学生需要关联一个学生表）
+     */
+    private IdentityEnum identity;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -183,6 +189,7 @@ public class SysUser implements Serializable {
         sb.append(", updateTime=").append(updateTime);
         sb.append(", delFlag=").append(delFlag);
         sb.append(", roles=").append(roles);
+        sb.append(", identity=").append(identity);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
