@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SocietyUserVo  implements Serializable {
+public class SocietyUserVo implements Serializable {
     /**
      * 用户名
      */
@@ -73,4 +73,9 @@ public class SocietyUserVo  implements Serializable {
      * 所在班级
      */
     private String classes;
+
+    /**
+     * 学号
+     */
+    private String studentId;
 }

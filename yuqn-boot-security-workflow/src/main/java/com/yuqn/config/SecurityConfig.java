@@ -72,6 +72,7 @@ public class SecurityConfig {
                         .requestMatchers(mvcMatcherBuilder.pattern("/test/getmessage")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/sys/login")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/sys/getOne")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/society/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error/**")).permitAll()
                         //  .requestMatchers().anonymous() 匿名验证，未登录可以访问，登录不可以访问
                         .anyRequest().authenticated()

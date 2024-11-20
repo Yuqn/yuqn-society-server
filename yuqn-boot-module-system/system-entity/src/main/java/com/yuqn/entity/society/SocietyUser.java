@@ -28,9 +28,9 @@ public class SocietyUser implements Serializable {
     private String id;
 
     /**
-     * 学生id
+     * 系统用户id
      */
-    private String studentId;
+    private String sysUserId;
 
     /**
      * 身份证
@@ -40,17 +40,27 @@ public class SocietyUser implements Serializable {
     /**
      * 所在学院
      */
-    private String college;
+    private String societyCollegeId;
 
     /**
      * 所在专业
      */
-    private String major;
+    private String societyMajorId;
 
     /**
      * 所在班级
      */
-    private String classes;
+    private String societyClassesId;
+
+    /**
+     * 年级
+     */
+    private String societyGradeId;
+
+    /**
+     * 学号
+     */
+    private String studentId;
 
     /**
      * 角色状态（0正常 1停用）
@@ -100,11 +110,11 @@ public class SocietyUser implements Serializable {
         }
         SocietyUser other = (SocietyUser) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getStudentId() == null ? other.getStudentId() == null : this.getStudentId().equals(other.getStudentId()))
+            && (this.getSysUserId() == null ? other.getSysUserId() == null : this.getSysUserId().equals(other.getSysUserId()))
             && (this.getCard() == null ? other.getCard() == null : this.getCard().equals(other.getCard()))
-            && (this.getCollege() == null ? other.getCollege() == null : this.getCollege().equals(other.getCollege()))
-            && (this.getMajor() == null ? other.getMajor() == null : this.getMajor().equals(other.getMajor()))
-            && (this.getClasses() == null ? other.getClasses() == null : this.getClasses().equals(other.getClasses()))
+            && (this.getSocietyCollegeId() == null ? other.getSocietyCollegeId() == null : this.getSocietyCollegeId().equals(other.getSocietyCollegeId()))
+            && (this.getSocietyMajorId() == null ? other.getSocietyMajorId() == null : this.getSocietyMajorId().equals(other.getSocietyMajorId()))
+            && (this.getSocietyClassesId() == null ? other.getSocietyClassesId() == null : this.getSocietyClassesId().equals(other.getSocietyClassesId()))
             && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
             && (this.getDelFlag() == null ? other.getDelFlag() == null : this.getDelFlag().equals(other.getDelFlag()))
             && (this.getCreateBy() == null ? other.getCreateBy() == null : this.getCreateBy().equals(other.getCreateBy()))
@@ -118,11 +128,11 @@ public class SocietyUser implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getStudentId() == null) ? 0 : getStudentId().hashCode());
+        result = prime * result + ((getSysUserId() == null) ? 0 : getSysUserId().hashCode());
         result = prime * result + ((getCard() == null) ? 0 : getCard().hashCode());
-        result = prime * result + ((getCollege() == null) ? 0 : getCollege().hashCode());
-        result = prime * result + ((getMajor() == null) ? 0 : getMajor().hashCode());
-        result = prime * result + ((getClasses() == null) ? 0 : getClasses().hashCode());
+        result = prime * result + ((getSocietyCollegeId() == null) ? 0 : getSocietyCollegeId().hashCode());
+        result = prime * result + ((getSocietyMajorId() == null) ? 0 : getSocietyMajorId().hashCode());
+        result = prime * result + ((getSocietyClassesId() == null) ? 0 : getSocietyClassesId().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
         result = prime * result + ((getDelFlag() == null) ? 0 : getDelFlag().hashCode());
         result = prime * result + ((getCreateBy() == null) ? 0 : getCreateBy().hashCode());
@@ -139,11 +149,12 @@ public class SocietyUser implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", studentId=").append(studentId);
+        sb.append(", studentId=").append(sysUserId);
         sb.append(", card=").append(card);
-        sb.append(", college=").append(college);
-        sb.append(", major=").append(major);
-        sb.append(", classes=").append(classes);
+        sb.append(", societyCollegeId=").append(societyCollegeId);
+        sb.append(", societyMajorId=").append(societyMajorId);
+        sb.append(", societyClassesId=").append(societyClassesId);
+        sb.append(", societyGradeId=").append(societyGradeId);
         sb.append(", status=").append(status);
         sb.append(", delFlag=").append(delFlag);
         sb.append(", createBy=").append(createBy);
