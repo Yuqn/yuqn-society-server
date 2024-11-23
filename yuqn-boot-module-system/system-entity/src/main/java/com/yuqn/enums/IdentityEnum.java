@@ -26,4 +26,13 @@ public enum IdentityEnum implements IEnum<Integer> {
         return this.value;
     }
 
+    public static IdentityEnum fromCode(int code) {
+        for (IdentityEnum identityEnum : IdentityEnum.values()) {
+            if (identityEnum.getValue() == code) {
+                return identityEnum;
+            }
+        }
+        throw new IllegalArgumentException("Unknown sex code: " + code);
+    }
+
 }

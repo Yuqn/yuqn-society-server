@@ -32,9 +32,16 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Autowired
     private MenuMapper menuMapper;
 
+    /**
+     * @author: yuqn
+     * @Date: 2024/11/24 0:30
+     * @description:
+     * 根据用户名查询到用户信息，并且映射到UserDetails
+     * @param: null
+     * @return: null
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         // 查询用户
         System.out.println("username==" + username);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();

@@ -73,6 +73,9 @@ public class SecurityConfig {
                         .requestMatchers(mvcMatcherBuilder.pattern("/sys/login")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/sys/getOne")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/society/register")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/society/getDataTree")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/society/getDataGrade")).permitAll()
+                        .requestMatchers(mvcMatcherBuilder.pattern("/society/userLogin")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/error/**")).permitAll()
                         //  .requestMatchers().anonymous() 匿名验证，未登录可以访问，登录不可以访问
                         .anyRequest().authenticated()

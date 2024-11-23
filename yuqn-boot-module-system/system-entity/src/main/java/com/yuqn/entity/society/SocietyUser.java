@@ -45,8 +45,8 @@ public class SocietyUser implements Serializable {
     /**
      * 所在专业
      */
+    @TableField("society_major_id")
     private String societyMajorId;
-
     /**
      * 所在班级
      */

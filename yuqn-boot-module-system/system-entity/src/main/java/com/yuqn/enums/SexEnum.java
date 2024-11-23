@@ -19,4 +19,13 @@ public enum SexEnum implements IEnum<Integer> {
     public Integer getValue() {
         return this.value;
     }
+
+    public static SexEnum fromCode(int code) {
+        for (SexEnum sex : SexEnum.values()) {
+            if (sex.getValue() == code) {
+                return sex;
+            }
+        }
+        throw new IllegalArgumentException("Unknown sex code: " + code);
+    }
 }

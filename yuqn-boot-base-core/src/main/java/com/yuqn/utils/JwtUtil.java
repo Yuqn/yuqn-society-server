@@ -84,10 +84,10 @@ public class JwtUtil {
 
     public static void main(String[] args) throws Exception {
         // 创建jwt
-        String jwt = createJWT("123456");
-        System.out.println(jwt);
+//        String jwt = createJWT("123456");
+//        System.out.println(jwt);
         // 解析jwt
-        Claims claims = parseJWT("eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJkYmY3ZjRiNmI5ZmI0MWU5OWExNjcwNGNlNzliZWRmZSIsInN1YiI6IjIiLCJpc3MiOiJodWFuZiIsImlhdCI6MTcxNjQ3NDM0OSwiZXhwIjoxNzE2NDc3OTQ5fQ.8adiC8AKoeuc3pLy1bXG13nYwT31hVQFrcLAhJDGZ-4");
+        Claims claims = parseJWT("$10$ht8dSvSKNN5ccgtO.uJ3FO4P3hwCApbtIuWQj/jU.ap6JxdcdfrA6");
         String subject = claims.getSubject();
         System.out.println(subject);
     }

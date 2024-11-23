@@ -27,10 +27,6 @@ public class CollegeMajorClass implements Serializable {
      */
     private String value;
     /**
-     * 简介
-     */
-    private String msg;
-    /**
      * 子记录
      */
     private List<CollegeMajorClass> children;

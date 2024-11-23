@@ -1,5 +1,6 @@
 package com.yuqn.vo;
 
+import com.yuqn.enums.IdentityEnum;
 import com.yuqn.enums.SexEnum;
 import com.yuqn.enums.StatusEnum;
 import lombok.AllArgsConstructor;
@@ -62,20 +63,30 @@ public class SocietyUserVo implements Serializable {
     /**
      * 所在学院
      */
-    private String college;
+    private String societyCollegeId;
 
     /**
      * 所在专业
      */
-    private String major;
+    private String societyMajorId;
 
     /**
      * 所在班级
      */
-    private String classes;
+    private String societyClassesId;
+
+    /**
+     * 所在年级
+     */
+    private String societyGradeId;
 
     /**
      * 学号
      */
     private String studentId;
+
+    /**
+     * 类型，0学生，1教师
+     */
+    private IdentityEnum identity;
 }
