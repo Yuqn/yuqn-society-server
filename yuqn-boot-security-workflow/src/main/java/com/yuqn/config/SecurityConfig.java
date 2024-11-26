@@ -1,8 +1,11 @@
 package com.yuqn.config;
 
+import com.yuqn.component.CustomAuthenticationProvider;
 import com.yuqn.filter.JwtAuthenticationTokenFilter;
 import com.yuqn.handler.AccessDeniedHandlerImpl;
 import com.yuqn.handler.AuthenticationEntryPointImpl;
+import com.yuqn.service.impl.PhoneNumberUserService;
+import com.yuqn.service.impl.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,13 +54,27 @@ public class SecurityConfig {
     private AuthenticationEntryPointImpl authenticationEntryPoint;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        // 返回你的UserDetailsService实现
+        return new UserDetailsService();
+    }
+    @Bean
+    public PhoneNumberUserService phoneNumberUserService(){
+        return new PhoneNumberUserService();
+    }
+
+    @Bean
+    public CustomAuthenticationProvider customAuthenticationProvider() {
+        return new CustomAuthenticationProvider(userDetailsService(), passwordEncoder(),phoneNumberUserService());
     }
 
     @Bean
