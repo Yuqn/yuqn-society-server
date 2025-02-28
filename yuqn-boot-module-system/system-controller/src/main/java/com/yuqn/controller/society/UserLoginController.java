@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/society")
@@ -64,11 +65,47 @@ public class UserLoginController {
         }
     }
 
-    // 用户登录
+    // 学生登录
     @PostMapping("/userLogin")
-    @Operation(summary = "用户登录")
+    @Operation(summary = "学生登录")
     public Result userLogin(@RequestBody UserLoginVo userLoginVo){
         Result result = societyUserLoginService.userLogin(userLoginVo);
         return result;
     }
+
+    // 教师登录
+    @PostMapping("/teacherLogin")
+    @Operation(summary = "教师登录")
+    public Result teacherLogin(@RequestBody UserLoginVo userLoginVo){
+        Result result = societyUserLoginService.teacherLogin(userLoginVo);
+        return result;
+    }
+
+    // 判断是否已经注册过
+    @GetMapping("/isRegister")
+    @Operation(summary = "判断是否有该用户注册过")
+    public Result isRegister(@RequestParam String phonenumber){
+        System.out.println("phonenumber = " + phonenumber);
+        Result result = societyUserLoginService.isRegister(phonenumber);
+        return result;
+    }
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/2/28 2:01
+     * @description:
+     * 更改密码
+     * @param: null
+     * @return: null
+     */
+    @PostMapping("/changePassword")
+    @Operation(summary = "更改密码")
+    public Result changePassword(@RequestBody Map<String, String> requestBody){
+        String phonenumber = requestBody.get("phonenumber");
+        String password = requestBody.get("newPassword");
+        Result result = societyUserLoginService.changePassword(phonenumber, password);
+        return result;
+    }
+
+
 }

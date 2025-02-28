@@ -1,6 +1,7 @@
 package com.yuqn.service.society.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yuqn.dao.society.SocietyUserMapper;
 import com.yuqn.dao.society.SysUserMapper;
 import com.yuqn.entity.User;
@@ -15,6 +16,7 @@ import com.yuqn.vo.UserLoginVo;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -41,6 +43,8 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
     private SysUserMapper sysUserMapper;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private SysUserService sysUserService;
 
     @Override
     public List<CollegeMajorClass> getDataTree() {
@@ -102,7 +106,10 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
         sysUser.setEmail(societyUserVo.getEmail());
         sysUser.setIdentity(societyUserVo.getIdentity());
         sysUser.setNickName(societyUserVo.getNickName());
-        sysUser.setPassword(JwtUtil.createJWT(societyUserVo.getPassword()));
+        // 加密密码
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String password = encoder.encode(societyUserVo.getPassword());
+        sysUser.setPassword(password);
         sysUser.setSex(societyUserVo.getSex());
         sysUser.setPhonenumber(societyUserVo.getPhonenumber());
         sysUser.setRoles("ROLE_ACTIVITI_USER");
@@ -149,32 +156,99 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
     @Override
     public Result userLogin(UserLoginVo userLoginVo){
         System.out.println("userLoginVo = " + userLoginVo);
-        Result login = null;
+        Result result = null;
         if ("0".equals(userLoginVo.getLoginType())) {
-            System.out.println(" = ");
-            // 根据电话获取用户
-            LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SysUser::getPhonenumber, userLoginVo.getPhonenumber());
-            SysUser sysUser = sysUserMapper.selectOne(queryWrapper);
-            if (!Objects.isNull(sysUser)) {
-                User user = new User();
-                user.setUserName(sysUser.getUserName());
-                // 先解密码，为了兼容已经封装的security框架
-                try {
-                    Claims claims = JwtUtil.parseJWT(sysUser.getPassword());
-                    String subject = claims.getSubject();
-                    user.setPassword(subject);
-                }catch (Exception e){
-                    log.error("尝试解密密码，但是错误了，错误信息：{}",e.getMessage());
-                }
-                login = loginService.login(user);
-
-            }
+            User user = new User();
+            // 将手机号码当用户名，通过拼接，赋给username{ "userName":"phone:136900873"}，拼接为了自定义认证器能够区分登录类型
+            user.setUserName("phone:" + userLoginVo.getPhonenumber());
+            result = loginService.login(user);
+            System.out.println("result = " + result);
+            log.info("用户登录成功，用户信息为：{}",user);
         } else if ("1".equals(userLoginVo.getLoginType())) {
-            return null;
+            User user = new User();
+            user.setUserName("username:" + userLoginVo.getUserName());
+            user.setPassword(userLoginVo.getPassword());
+            result = loginService.login(user);
+            System.out.println("result = " + result);
+            log.info("用户登录成功，用户信息为：{}",user);
         } else {
-            login = Result.error(500, "登录类型错误");
+            result = Result.error(500, "登录类型错误");
         }
-        return login;
+        return result;
+    }
+
+    @Override
+    public Result teacherLogin(UserLoginVo userLoginVo) {
+        Result result = null;
+        User user = new User();
+        user.setUserName("username:" + userLoginVo.getUserName());
+        user.setPassword(userLoginVo.getPassword());
+        // 提前查库，用于确定是否有这个教师身份的用户
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getIdentity,1);
+        SysUser sysUser = sysUserMapper.selectOne(queryWrapper);
+        // 如果有这个身份，则开始进行登录验证，这个过程为了兼容安全框架，后期需要改
+        if (Objects.isNull(sysUser)){
+            return Result.error(500,"没有此教师身份的用户");
+        }
+        result = loginService.login(user);
+        System.out.println("result = " + result);
+        log.info("用户登录成功，用户信息为：{}",user);
+        return result;
+    }
+
+    @Override
+    public Result isRegister(String phonenumber) {
+        Result result = null;
+        // 提前查库，用于确定是否有这个教师身份的用户
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getPhonenumber,phonenumber);
+        SysUser sysUser = null;
+        try{
+            sysUser = sysUserMapper.selectOne(queryWrapper);
+            if(Objects.isNull(sysUser)){
+                result = Result.ok("可以注册");
+            }else{
+                result = Result.fail("该用户已注册");
+            }
+        }catch (Exception e){
+            log.error("查询用户信息，报错了{}",e.getMessage());
+        }finally {
+            return result;
+        }
+    }
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/2/28 2:06
+     * @description:
+     * 更改密码
+     * @param: null
+     * @return: null
+     */
+    @Override
+    public Result changePassword(String phonenumber,String password) {
+        Result result = null;
+        // 加密密码
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String newPassword = encoder.encode(password);
+        // 构造条件
+        UpdateWrapper<SysUser> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("phonenumber", phonenumber).set("password", newPassword);
+        // 更改
+        try{
+            boolean update = sysUserService.update(updateWrapper);
+            if(update){
+                log.info("用户更改信息成功，手机号码为：{},更改密码为{}",phonenumber,password);
+                result =  Result.ok("更改密码成功");
+            }else{
+                log.info("用户更改信息失败，请查看日志");
+                result =  Result.fail("更改密码失败");
+            }
+        }catch (Exception e){
+            log.error("查询用户信息，报错了{}",e.getMessage());
+        }finally {
+            return result;
+        }
     }
 }

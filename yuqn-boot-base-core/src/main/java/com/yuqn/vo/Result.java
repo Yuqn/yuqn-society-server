@@ -58,6 +58,22 @@ public class Result<T> implements Serializable {
         return r;
     }
 
+    public static<T> Result<T> fail() {
+        Result<T> r = new Result<T>();
+        r.setSuccess(true);
+        r.setCode(ResultConstant.SC_OK_201);
+        return r;
+    }
+
+    public static<T> Result<T> fail(String msg) {
+        Result<T> r = new Result<T>();
+        r.setSuccess(true);
+        r.setCode(ResultConstant.SC_OK_201);
+        r.setResult((T) msg);
+        r.setMessage(msg);
+        return r;
+    }
+
     public static<T> Result<T> OK() {
         Result<T> r = new Result<T>();
         r.setSuccess(true);

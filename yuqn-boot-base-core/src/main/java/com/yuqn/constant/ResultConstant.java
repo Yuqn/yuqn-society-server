@@ -11,5 +11,6 @@ public interface ResultConstant {
     Integer SC_INTERNAL_SERVER_ERROR_500 = 500;
     Integer SC_INTERNAL_NOT_FOUND_404 = 404;
     Integer SC_OK_200 = 200;
+    Integer SC_OK_201 = 201;
     Integer SC_JEECG_NO_AUTHZ=510;
 }

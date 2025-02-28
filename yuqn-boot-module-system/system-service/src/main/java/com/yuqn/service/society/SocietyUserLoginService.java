@@ -56,4 +56,34 @@ public interface SocietyUserLoginService {
      * @return: null
      */
     Result userLogin(UserLoginVo userLoginVo);
+
+    /**
+     * @author: yuqn
+     * @Date: 2024/11/23 22:55
+     * @description:
+     * 教师登录
+     * @param: null
+     * @return: null
+     */
+    Result teacherLogin(UserLoginVo userLoginVo);
+
+    /**
+     * @author: yuqn
+     * @Date: 2024/11/23 22:55
+     * @description:
+     * 判断是否有该号码的用户
+     * @param: null
+     * @return: null
+     */
+    Result isRegister(String phonenumber);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/2/28 2:06
+     * @description:
+     * 更改密码
+     * @param: null
+     * @return: null
+     */
+    Result changePassword(String phonenumber,String newPassword);
 }
