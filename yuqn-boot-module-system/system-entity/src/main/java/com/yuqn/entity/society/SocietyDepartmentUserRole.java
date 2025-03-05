@@ -35,7 +35,7 @@ public class SocietyDepartmentUserRole implements Serializable {
     /**
      *
      */
-    private Integer userId;
+    private String userId;
 
     /**
      *

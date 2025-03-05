@@ -107,5 +107,20 @@ public class UserLoginController {
         return result;
     }
 
+    /**
+     * @author: yuqn
+     * @Date: 2025/2/28 22:25
+     * @description:
+     * 获取用户角色
+     * @param: null
+     * @return: null
+     */
+    @GetMapping("/getRole")
+    @Operation(summary = "更改密码")
+    public Result getRole(@RequestHeader("Token") String token){
+        System.out.println("//////////////////" + token);
+        Result result = societyUserLoginService.getRole(token);
+        return result;
+    }
 
 }

@@ -17,10 +17,20 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,name,introduce,
-        type,status,del_flag,
-        create_by,create_time,update_by,
-        update_time
-    </sql>
+    <select id="getSocietyList" resultType="com.yuqn.vo.SocietyListVo" parameterType="String">
+        select society_body.id as 'society_id',society_body.name as 'society_name', society_body.create_by,society_body.introduce as 'society_introduce',society_body.create_time,sys_user.nick_name as 'society_by_name'
+        from society_body LEFT JOIN sys_user on society_body.create_by = sys_user.id
+        where society_body.name LIKE CONCAT('%', #{societyName}, '%')
+    </select>
+    <select id="getSocietyUserCount" resultType="java.lang.Integer" parameterType="String">
+        SELECT COUNT(DISTINCT user_id) AS unique_user_count
+        FROM society_body_user_role
+        WHERE society_body_id = #{societyId};
+    </select>
+    <select id="getSocietyDepartmentCount" resultType="java.lang.Integer" parameterType="String">
+        select count(*)
+        from society_department
+        where society_body_id = #{societyId};
+    </select>
+
 </mapper>

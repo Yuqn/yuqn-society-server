@@ -9,7 +9,10 @@
             <result property="menuId" column="menu_id" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        role_id,menu_id
-    </sql>
+    <select id="getUserMenu" resultType="com.yuqn.entity.society.SysMenu" parameterType="String">
+        select sys_menu.id ,sys_menu.menu_name,sys_menu.icon
+        from sys_role_menu LEFT JOIN sys_role on sys_role_menu.role_id = sys_role.id
+                           LEFT JOIN sys_menu on sys_role_menu.menu_id = sys_menu.id
+        where sys_role_menu.role_id = #{roleId}
+    </select>
 </mapper>

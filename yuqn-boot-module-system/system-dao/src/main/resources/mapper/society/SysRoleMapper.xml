@@ -17,10 +17,16 @@
             <result property="remark" column="remark" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,name,role_key,
-        status,del_flag,create_by,
-        create_time,update_by,update_time,
-        remark
-    </sql>
+
+    <select id="getSocietyRoleUser" resultType="java.lang.String" parameterType="String">
+        select sys_user.nick_name
+        from society_body_user_role LEFT JOIN sys_user on society_body_user_role.user_id = sys_user.id
+        where society_body_user_role.role_id = #{roleId} and society_body_user_role.society_body_id = #{societyId}
+    </select>
+    <select id="getDepartmentMinisterOrBiceMinister" resultType="java.lang.String" parameterType="String">
+        select sys_user.nick_name
+        from society_department_user_role LEFT JOIN sys_user on society_department_user_role.user_id = sys_user.id
+                                          LEFT JOIN sys_role on sys_role.id	= society_department_user_role.role_id
+        where society_department_user_role.department_id = #{departmentId} and society_department_user_role.role_id = #{roleId}
+    </select>
 </mapper>

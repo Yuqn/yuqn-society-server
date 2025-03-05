@@ -2,6 +2,7 @@ package com.yuqn.service.society.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.yuqn.dao.society.SocietyUserLoginMapper;
 import com.yuqn.dao.society.SocietyUserMapper;
 import com.yuqn.dao.society.SysUserMapper;
 import com.yuqn.entity.User;
@@ -9,10 +10,7 @@ import com.yuqn.entity.society.*;
 import com.yuqn.service.LoginService;
 import com.yuqn.service.society.*;
 import com.yuqn.utils.JwtUtil;
-import com.yuqn.vo.CollegeMajorClass;
-import com.yuqn.vo.Result;
-import com.yuqn.vo.SocietyUserVo;
-import com.yuqn.vo.UserLoginVo;
+import com.yuqn.vo.*;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -45,6 +41,12 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
     private LoginService loginService;
     @Autowired
     private SysUserService sysUserService;
+    @Autowired
+    private SocietyBodyUserRoleService societyBodyUserRoleService;
+    @Autowired
+    private SocietyDepartmentService societyDepartmentService;
+    @Autowired
+    private SocietyUserLoginMapper societyUserLoginMapper;
 
     @Override
     public List<CollegeMajorClass> getDataTree() {
@@ -250,5 +252,40 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
         }finally {
             return result;
         }
+    }
+
+    @Override
+    public Result getRole(String token) {
+        Result result = null;
+        // 解析token获取id
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+            log.info("测试获取用户id，为：{}",userid);
+            System.out.println("userid = " + userid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        // 获取用户角色
+        List<UserBodyRole> societyRole = societyUserLoginMapper.getSocietyRole("1895163679985389570");
+        List<UserBodyRole> departmentRole = societyUserLoginMapper.getDepartmentRole("1895163679985389570");
+        // 构建返回数据
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("societyRole",societyRole);
+        map.put("departmentRole",departmentRole);
+        // 构造学生身份
+        HashMap<String,Object> otherRole = new HashMap<>();
+        otherRole.put("roleId","9");
+        otherRole.put("roleKey","6");
+        otherRole.put("roleName","student");
+        otherRole.put("userId",userid);
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(otherRole);
+        map.put("otherRole",objects);
+        result = Result.ok(map);
+        return result;
     }
 }

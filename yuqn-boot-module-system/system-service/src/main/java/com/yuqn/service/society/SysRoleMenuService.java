@@ -2,6 +2,7 @@ package com.yuqn.service.society;
 
 import com.yuqn.entity.society.SysRoleMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuqn.vo.Result;
 
 /**
 * @author yuqn
@@ -9,5 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-09-16 16:03:30
 */
 public interface SysRoleMenuService extends IService<SysRoleMenu> {
+    // 获取角色功能列表
+    Result getUserMenu(String roleId);
 
 }

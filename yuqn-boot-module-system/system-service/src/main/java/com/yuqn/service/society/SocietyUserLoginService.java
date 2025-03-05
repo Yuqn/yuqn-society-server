@@ -86,4 +86,14 @@ public interface SocietyUserLoginService {
      * @return: null
      */
     Result changePassword(String phonenumber,String newPassword);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/2/28 22:38
+     * @description:
+     * 获取token
+     * @param: null
+     * @return: null
+     */
+    Result getRole(String token);
 }

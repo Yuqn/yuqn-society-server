@@ -17,10 +17,9 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,name,society_body_id,
-        introduce,status,del_flag,
-        create_by,create_time,update_by,
-        update_time
-    </sql>
+    <select id="getDepartmentUserCount" resultType="java.lang.Integer">
+        SELECT COUNT(DISTINCT user_id) AS unique_user_count
+        FROM society_department_user_role
+        WHERE department_id = #{departmentId};
+    </select>
 </mapper>
