@@ -40,4 +40,8 @@ public class UserBodyRole {
      * 角色key
      */
     private String roleKey;
+    /**
+     * 用户名字
+     */
+    private String nickName;
 }

@@ -2,6 +2,7 @@ package com.yuqn.dao.society;
 
 import com.yuqn.entity.test.YuqnTest;
 import com.yuqn.vo.UserBodyRole;
+import com.yuqn.vo.UserDepartmentRole;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,5 +16,5 @@ import java.util.List;
 @Mapper
 public interface SocietyUserLoginMapper {
     List<UserBodyRole> getSocietyRole(String userId);
-    List<UserBodyRole> getDepartmentRole(String userId);
+    List<UserDepartmentRole> getDepartmentRole(String userId);
 }

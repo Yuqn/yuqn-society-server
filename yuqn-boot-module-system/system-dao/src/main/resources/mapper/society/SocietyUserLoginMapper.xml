@@ -20,19 +20,22 @@
         <result property="departmentName" column="department_name" jdbcType="VARCHAR"/>
         <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
         <result property="roleKey" column="role_key" jdbcType="VARCHAR"/>
+        <result property="societyBodyId" column="society_body_id" jdbcType="VARCHAR"/>
+        <result property="bodyName" column="society_body_name" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="getSocietyRole" resultMap="BaseResultMap" parameterType="String">
         select society_body_user_role.user_id,society_body_user_role.society_body_id,society_body_user_role.role_id,society_body.name as 'body_name',sys_role.name  as 'role_name',sys_role.role_key
         from society_body_user_role LEFT JOIN society_body on society_body_user_role.society_body_id = society_body.id
                                     LEFT JOIN sys_role on society_body_user_role.role_id = sys_role.id
-        where society_body_user_role.user_id = #{userId}
+        where society_body_user_role.user_id = #{userId} and society_body_user_role.del_flag = 0
     </select>
 
     <select id="getDepartmentRole" resultMap="DepartmentResultMap" parameterType="String">
-        select society_department_user_role.user_id,society_department_user_role.department_id,society_department_user_role.role_id,society_department.name as 'department_name',sys_role.name as 'role_name',sys_role.role_key
+        select society_department_user_role.user_id,society_department_user_role.department_id,society_department_user_role.role_id,society_department.name as 'department_name',sys_role.name as 'role_name',sys_role.role_key,society_department.society_body_id as 'society_body_id',society_body.name as 'society_body_name'
         from society_department_user_role LEFT JOIN society_department on society_department_user_role.department_id = society_department.id
                                           LEFT JOIN sys_role on society_department_user_role.role_id = sys_role.id
-        where society_department_user_role.user_id = #{userId}
+                                          LEFT JOIN society_body on society_department.society_body_id = society_body.id
+        where society_department_user_role.user_id = #{userId} and society_department_user_role.del_flag = 0
     </select>
 </mapper>

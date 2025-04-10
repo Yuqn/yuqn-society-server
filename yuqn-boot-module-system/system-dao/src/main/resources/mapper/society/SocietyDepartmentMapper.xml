@@ -20,6 +20,18 @@
     <select id="getDepartmentUserCount" resultType="java.lang.Integer">
         SELECT COUNT(DISTINCT user_id) AS unique_user_count
         FROM society_department_user_role
-        WHERE department_id = #{departmentId};
+        WHERE department_id = #{departmentId} and society_department_user_role.del_flag = '0';
+    </select>
+    <select id="getDepartmentUserList" resultType="com.yuqn.vo.SocietyUserListVo" parameterType="String">
+        select DISTINCT sys_user.id as 'user_id',sys_user.user_name,sys_user.nick_name,society_college.message as 'user_college',society_grade.value as 'user_grade',society_major.value as 'user_major'
+        from (
+                 select  user_id
+                 from society_department_user_role
+                 where society_department_user_role.department_id in (select society_department.id from society_department where society_department.society_body_id = #{societyId})
+             ) usertab INNER JOIN sys_user on usertab.user_id = sys_user.id
+                       INNER JOIN society_user on society_user.sys_user_id = sys_user.id
+                       INNER join society_college on society_user.society_college_id = society_college.id
+                       INNER join society_grade on society_user.society_grade_id = society_grade.id
+                       INNER join society_major on society_user.society_major_id = society_major.id
     </select>
 </mapper>

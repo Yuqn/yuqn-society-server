@@ -1,15 +1,18 @@
 package com.yuqn.service.society.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yuqn.dao.society.SocietyUserLoginMapper;
 import com.yuqn.dao.society.SocietyUserMapper;
 import com.yuqn.dao.society.SysUserMapper;
 import com.yuqn.entity.User;
 import com.yuqn.entity.society.*;
+import com.yuqn.enums.SexEnum;
 import com.yuqn.service.LoginService;
 import com.yuqn.service.society.*;
 import com.yuqn.utils.JwtUtil;
+import com.yuqn.utils.RedisCache;
 import com.yuqn.vo.*;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -47,6 +52,8 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
     private SocietyDepartmentService societyDepartmentService;
     @Autowired
     private SocietyUserLoginMapper societyUserLoginMapper;
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public List<CollegeMajorClass> getDataTree() {
@@ -163,8 +170,11 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
             User user = new User();
             // 将手机号码当用户名，通过拼接，赋给username{ "userName":"phone:136900873"}，拼接为了自定义认证器能够区分登录类型
             user.setUserName("phone:" + userLoginVo.getPhonenumber());
-            result = loginService.login(user);
-            System.out.println("result = " + result);
+            try{
+                result = loginService.login(user);
+            }catch (Exception e){
+                result = Result.error(302, "登录失败，请输入正确信息");
+            }
             log.info("用户登录成功，用户信息为：{}",user);
         } else if ("1".equals(userLoginVo.getLoginType())) {
             User user = new User();
@@ -269,13 +279,34 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
             throw new RuntimeException("token非法");
         }
         // 获取用户角色
-        List<UserBodyRole> societyRole = societyUserLoginMapper.getSocietyRole("1895163679985389570");
-        List<UserBodyRole> departmentRole = societyUserLoginMapper.getDepartmentRole("1895163679985389570");
-        // 构建返回数据
+        List<UserBodyRole> societyRole = societyUserLoginMapper.getSocietyRole(userid);
+        List<UserDepartmentRole> departmentRole = societyUserLoginMapper.getDepartmentRole(userid);
+        System.out.println("departmentRole =---------------------- " + departmentRole);
+        // 去重
+        Map<List<String>, UserBodyRole> collect = societyRole.stream()
+                .collect(Collectors.toMap(
+                        role -> Arrays.asList(role.getSocietyBodyId(), role.getRoleId()),
+                        Function.identity(),
+                        (existing, replacement) -> existing
+                ));
+        // 将 Map 转换回 List
+        List<UserBodyRole> filteredList = new ArrayList<>(collect.values());
+        // 去重
+        Map<List<String>, UserDepartmentRole> collect1 = departmentRole.stream()
+                .collect(Collectors.toMap(
+                        role -> Arrays.asList(role.getDepartmentId(), role.getRoleId()),
+                        Function.identity(),
+                        (existing, replacement) -> existing
+                ));
+        // 将 Map 转换回 List
+        List<UserDepartmentRole> filteredList1 = new ArrayList<>(collect1.values());
 
+        // 构建返回数据
         HashMap<String, Object> map = new HashMap<>();
-        map.put("societyRole",societyRole);
-        map.put("departmentRole",departmentRole);
+//        map.put("societyRole",societyRole);
+//        map.put("departmentRole",departmentRole);
+        map.put("societyRole",filteredList);
+        map.put("departmentRole",filteredList1);
         // 构造学生身份
         HashMap<String,Object> otherRole = new HashMap<>();
         otherRole.put("roleId","9");
@@ -288,4 +319,115 @@ public class SocietyUserLoginServiceImpl implements SocietyUserLoginService {
         result = Result.ok(map);
         return result;
     }
+
+    @Override
+    public Result logout(String token) {
+        Result result = null;
+        // 解析token获取id
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+            log.info("测试获取用户id，为：{}",userid);
+            System.out.println("userid = " + userid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        try {
+            // 删除redis中的token
+            redisCache.deleteObject("login:" + userid);
+            result = Result.ok("退出成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = Result.fail("退出失败");
+        }
+        return result;
+    }
+
+    @Override
+    public Result getUserDetail(String token) {
+        Result result = null;
+        // 解析token获取id
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+            log.info("测试获取用户id，为：{}",userid);
+            System.out.println("userid = " + userid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        SocietyUserVo societyUserVo = new SocietyUserVo();
+        SysUser sysUser = sysUserMapper.selectOne(new QueryWrapper<SysUser>().eq("id", userid));
+        if (Objects.nonNull(sysUser)){
+            societyUserVo.setUserName(sysUser.getUserName());
+            societyUserVo.setNickName(sysUser.getNickName());
+            societyUserVo.setPassword(sysUser.getPassword());
+            societyUserVo.setEmail(sysUser.getEmail());
+            societyUserVo.setPhonenumber(sysUser.getPhonenumber());
+            societyUserVo.setSex(sysUser.getSex());
+            societyUserVo.setAvatar(sysUser.getAvatar());
+            societyUserVo.setStudentId(userid);
+            SocietyUser societyUser = societyUserMapper.selectOne(new QueryWrapper<SocietyUser>().eq("sys_user_id", userid));
+            if (Objects.nonNull(societyUser)){
+                societyUserVo.setCard(societyUser.getCard());
+                societyUserVo.setSocietyCollegeId(societyUser.getSocietyCollegeId());
+                societyUserVo.setSocietyMajorId(societyUser.getSocietyMajorId());
+                societyUserVo.setSocietyClassesId(societyUser.getSocietyClassesId());
+                societyUserVo.setSocietyGradeId(societyUser.getSocietyGradeId());
+            }
+        }
+        result = Result.ok(societyUserVo);
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Result updateUser(String token, SocietyUserVo societyUserVo) {
+        Result result = Result.fail("更改失败");
+        // 解析token获取id
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userid = claims.getSubject();
+            log.info("测试获取用户id，为：{}",userid);
+            System.out.println("userid = " + userid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("token非法");
+        }
+        SysUser sysUser = new SysUser();
+        SysUser sysUser1 = sysUserMapper.selectOne(new QueryWrapper<SysUser>().eq("id", userid));
+        if(sysUser1.getPassword().equals(societyUserVo.getPassword())){
+            System.out.println("密码一致");
+        }else{
+            // 加密密码
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String password = encoder.encode(societyUserVo.getPassword());
+            sysUser.setPassword(password);
+        }
+        sysUser.setId(userid);
+        sysUser.setNickName(societyUserVo.getNickName());
+        sysUser.setEmail(societyUserVo.getEmail());
+        sysUser.setUpdateBy(Long.valueOf(userid));
+        sysUser.setSex(societyUserVo.getSex());
+        int i = sysUserMapper.updateById(sysUser);
+        if (i>0){
+            SocietyUser societyUser = societyUserMapper.selectOne(new QueryWrapper<SocietyUser>().eq("sys_user_id", userid));
+            societyUser.setCard(societyUserVo.getCard());
+            societyUser.setSocietyGradeId(societyUserVo.getSocietyGradeId());
+            societyUser.setSocietyCollegeId(societyUserVo.getSocietyCollegeId());
+            societyUser.setSocietyMajorId(societyUserVo.getSocietyMajorId());
+            societyUser.setSocietyClassesId(societyUserVo.getSocietyClassesId());
+            societyUser.setUpdateBy(userid);
+            int i1 = societyUserMapper.updateById(societyUser);
+            if (i1>0){
+                result = Result.ok("更改信息成功");
+            }
+        }
+        return result;
+    }
+
 }

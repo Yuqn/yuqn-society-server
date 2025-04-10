@@ -1,5 +1,6 @@
 package com.yuqn.utils;
 
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.task.runtime.TaskRuntime;
@@ -30,25 +31,25 @@ public class ActivitiCache {
     /**
      * 因为使用了整合框架，所以可以直接使用注入的方式来使用相关的类
      */
-    @Autowired
+    @Resource
     private ProcessEngine processEngine;
 
-    @Autowired
+    @Resource
     private ProcessRuntime processRuntime;
 
-    @Autowired
+    @Resource
     private TaskRuntime taskRuntime;
 
-    @Autowired
+    @Resource
     private RuntimeService runtimeService;
 
-    @Autowired
+    @Resource
     private TaskService taskService;
 
-    @Autowired
+    @Resource
     private RepositoryService repositoryService;
 
-    @Autowired
+    @Resource
     private HistoryService historyService;
 
 

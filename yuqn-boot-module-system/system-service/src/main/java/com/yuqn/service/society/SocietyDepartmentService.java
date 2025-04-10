@@ -2,6 +2,7 @@ package com.yuqn.service.society;
 
 import com.yuqn.entity.society.SocietyDepartment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuqn.vo.AddDepartmentVo;
 import com.yuqn.vo.Result;
 
 import java.util.List;
@@ -31,4 +32,34 @@ public interface SocietyDepartmentService extends IService<SocietyDepartment> {
      * @return: null
      */
     Result getDepartmentUserById(String departmentId);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/7 19:40
+     * @description:
+     * 新建部门
+     * @param: null
+     * @return: null
+     */
+    Result addDepartment(AddDepartmentVo addDepartmentVo, String token);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/7 21:12
+     * @description:
+     * 解散社团
+     * @param: null
+     * @return: null
+     */
+    Result deleteDepartment(AddDepartmentVo addDepartmentVo, String token);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/9 0:27
+     * @description:
+     * 查看用户详细信息
+     * @param: null
+     * @return: null
+     */
+    Result getDepartmentUserDetailsById(String societyId, String departmentId, String userId, String roleId);
 }

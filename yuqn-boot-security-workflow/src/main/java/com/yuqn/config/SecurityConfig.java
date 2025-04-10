@@ -83,7 +83,6 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> auth
-                        // .requestMatchers(mvcMatcherBuilder.pattern("/hello")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/user/login")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/demo/set")).permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("/test/getmessage")).permitAll()

@@ -20,7 +20,7 @@
     <select id="getSocietyList" resultType="com.yuqn.vo.SocietyListVo" parameterType="String">
         select society_body.id as 'society_id',society_body.name as 'society_name', society_body.create_by,society_body.introduce as 'society_introduce',society_body.create_time,sys_user.nick_name as 'society_by_name'
         from society_body LEFT JOIN sys_user on society_body.create_by = sys_user.id
-        where society_body.name LIKE CONCAT('%', #{societyName}, '%')
+        where society_body.name LIKE CONCAT('%', #{societyName}, '%') AND society_body.del_flag = 0
     </select>
     <select id="getSocietyUserCount" resultType="java.lang.Integer" parameterType="String">
         SELECT COUNT(DISTINCT user_id) AS unique_user_count
@@ -30,7 +30,21 @@
     <select id="getSocietyDepartmentCount" resultType="java.lang.Integer" parameterType="String">
         select count(*)
         from society_department
-        where society_body_id = #{societyId};
+        where society_body_id = #{societyId} and del_flag = 0;
+    </select>
+    <select id="getSocietyUserList" resultType="com.yuqn.vo.SocietyUserListVo" parameterType="String">
+        select DISTINCT sys_user.id as 'user_id',sys_user.user_name,sys_user.nick_name,society_college.message as 'user_college',society_grade.value as 'user_grade',society_major.value as 'user_major'
+        from society_body_user_role LEFT JOIN society_user on society_body_user_role.user_id = society_user.sys_user_id
+                                    INNER JOIN society_college on society_user.society_college_id = society_college.id
+                                    INNER JOIN society_grade on society_user.society_grade_id = society_grade.id
+                                    INNER JOIN society_major on society_user.society_major_id = society_major.id
+                                    INNER JOIN sys_user on sys_user.id = society_body_user_role.user_id
+        where society_body_user_role.society_body_id = #{societyId}
+    </select>
+    <select id="getSocietyDetailsById" resultType="com.yuqn.vo.SocietyListVo" parameterType="String">
+        select society_body.id as 'society_id',society_body.name as 'society_name', society_body.create_by,society_body.introduce as 'society_introduce',society_body.create_time,sys_user.nick_name as 'society_by_name'
+        from society_body LEFT JOIN sys_user on society_body.create_by = sys_user.id
+        where society_body.id = #{societyId}
     </select>
 
 </mapper>

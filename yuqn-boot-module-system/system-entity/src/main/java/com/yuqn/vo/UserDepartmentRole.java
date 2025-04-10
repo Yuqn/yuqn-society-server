@@ -23,6 +23,14 @@ public class UserDepartmentRole {
     /**
      * 社团id
      */
+    private String societyBodyId;
+    /**
+     * 社团名字
+     */
+    private String bodyName;
+    /**
+     * 部门id
+     */
     private String departmentId;
     /**
      * 角色id
@@ -32,6 +40,10 @@ public class UserDepartmentRole {
      * 社团名字
      */
     private String departmentName;
+    /**
+     * 社团介绍
+     */
+    private String departmentIntroduce;
     /**
      * 角色名字
      */

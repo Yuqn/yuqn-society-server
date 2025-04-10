@@ -2,7 +2,10 @@ package com.yuqn.dao.society;
 
 import com.yuqn.entity.society.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yuqn.vo.UserBodyRole;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
 * @author yuqn
@@ -30,6 +33,15 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @return: null
      */
     String getDepartmentMinisterOrBiceMinister(String departmentId,String roleId);
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/5 2:23
+     * @description:
+     * 获取副主席列表
+     * @param: null
+     * @return: null
+     */
+    List<UserBodyRole> getSocietyviceChairman(String societyId);
 }
 
 

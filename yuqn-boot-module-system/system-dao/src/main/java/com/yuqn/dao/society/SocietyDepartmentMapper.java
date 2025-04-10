@@ -2,7 +2,10 @@ package com.yuqn.dao.society;
 
 import com.yuqn.entity.society.SocietyDepartment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yuqn.vo.SocietyUserListVo;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
 * @author yuqn
@@ -14,6 +17,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SocietyDepartmentMapper extends BaseMapper<SocietyDepartment> {
     // 查看部门人数
     int getDepartmentUserCount(String departmentId);
+    // 获取部门成员列表
+    List<SocietyUserListVo> getDepartmentUserList(String societyId);
 }
 
 

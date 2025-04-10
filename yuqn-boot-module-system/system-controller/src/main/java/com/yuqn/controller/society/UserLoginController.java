@@ -65,6 +65,21 @@ public class UserLoginController {
         }
     }
 
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/22 0:16
+     * @description:
+     * 获取用户详细信息
+     * @param: null
+     * @return: null
+     */
+    @GetMapping("/getUserDetail")
+    @Operation(summary = "新用户注册")
+    public Result getUserDetail(@RequestHeader("Token") String token){
+        Result result = societyUserLoginService.getUserDetail(token);
+        return result;
+    }
+
     // 学生登录
     @PostMapping("/userLogin")
     @Operation(summary = "学生登录")
@@ -118,9 +133,38 @@ public class UserLoginController {
     @GetMapping("/getRole")
     @Operation(summary = "更改密码")
     public Result getRole(@RequestHeader("Token") String token){
-        System.out.println("//////////////////" + token);
         Result result = societyUserLoginService.getRole(token);
         return result;
     }
 
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/20 2:06
+     * @description:
+     * 退出登录
+     * @param: null
+     * @return: null
+     */
+    @PostMapping("/logout")
+    @Operation(summary = "更改密码")
+    public Result logout(@RequestHeader("Token") String token){
+        Result result = societyUserLoginService.logout(token);
+        return result;
+    }
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/20 2:06
+     * @description:
+     * 更改用户信息
+     * @param: null
+     * @return: null
+     */
+    @PostMapping("/updateUser")
+    @Operation(summary = "更改用户信息")
+    public Result updateUser(@RequestHeader("Token") String token,@RequestBody SocietyUserVo societyUserVo){
+        System.out.println("societyUserVo = " + societyUserVo);
+        Result result = societyUserLoginService.updateUser(token,societyUserVo);
+        return result;
+    }
 }

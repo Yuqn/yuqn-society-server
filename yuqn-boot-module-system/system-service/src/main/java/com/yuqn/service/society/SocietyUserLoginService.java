@@ -96,4 +96,34 @@ public interface SocietyUserLoginService {
      * @return: null
      */
     Result getRole(String token);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/20 2:09
+     * @description:
+     * 退出登录
+     * @param: null
+     * @return: null
+     */
+    Result logout(String token);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/22 0:19
+     * @description:
+     * 获取用户信息
+     * @param: null
+     * @return: null
+     */
+    Result getUserDetail(String token);
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/22 15:58
+     * @description:
+     * 更改用户信息
+     * @param: null
+     * @return: null
+     */
+    Result updateUser(String token, SocietyUserVo societyUserVo);
 }

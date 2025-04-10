@@ -2,6 +2,7 @@ package com.yuqn.dao.society;
 
 import com.yuqn.entity.society.SocietyClasses;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
 * @author yuqn
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-11-20 09:42:44
 * @Entity com/yuqn/entity/society.society.SocietyClasses
 */
+@Mapper
 public interface SocietyClassesMapper extends BaseMapper<SocietyClasses> {
 
 }

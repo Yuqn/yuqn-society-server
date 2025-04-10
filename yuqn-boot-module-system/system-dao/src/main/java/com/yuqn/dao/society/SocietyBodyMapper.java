@@ -3,6 +3,7 @@ package com.yuqn.dao.society;
 import com.yuqn.entity.society.SocietyBody;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuqn.vo.SocietyListVo;
+import com.yuqn.vo.SocietyUserListVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,10 +18,14 @@ import java.util.List;
 public interface SocietyBodyMapper extends BaseMapper<SocietyBody> {
     // 查看社团基本数据
     List<SocietyListVo> getSocietyList(String societyName);
+    // 查看社团基本数据
+    List<SocietyListVo> getSocietyDetailsById(String societyId);
     // 查看社团人数
     int getSocietyUserCount(String societyId);
     // 查看社团部门数
     int getSocietyDepartmentCount(String societyId);
+    // 获取社团成员列表
+    List<SocietyUserListVo> getSocietyUserList(String societyId);
 }
 
 

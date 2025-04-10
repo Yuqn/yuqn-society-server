@@ -2,6 +2,7 @@ package com.yuqn.service.society;
 
 import com.yuqn.entity.society.SocietyBodyUserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuqn.vo.Result;
 
 /**
 * @author yuqn
@@ -10,4 +11,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface SocietyBodyUserRoleService extends IService<SocietyBodyUserRole> {
 
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/15 3:27
+     * @description:
+     * 获取社团成员列表，用于编辑社团
+     * @param: null
+     * @return: null
+     */
+    Result getUserListById(String societyId);
 }

@@ -4,6 +4,7 @@ import com.yuqn.entity.society.SocietyDepartment;
 import com.yuqn.service.society.SocietyBodyService;
 import com.yuqn.service.society.SocietyDepartmentService;
 import com.yuqn.vo.Result;
+import com.yuqn.vo.UserDepartmentRole;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,26 @@ public class SocietyListController {
      */
     @GetMapping("/getDepartmentUserById")
     @Operation(summary = "获取部门成员列表")
-    public Result getDepartmentUserById(String departmentId){
+    public Result getDepartmentUserById(@RequestParam String departmentId){
         Result result = societyDepartmentService.getDepartmentUserById(departmentId);
+        return result;
+    }
+
+    /**
+     * @author: yuqn
+     * @Date: 2025/3/5 3:20
+     * @description:
+     * 查看部门成员
+     * @param: null
+     * @return: null
+     */
+    @GetMapping("/getDepartmentUserDetailsById")
+    @Operation(summary = "获取部门成员详细信息")
+    public Result getDepartmentUserDetailsById(@RequestParam String societyId,@RequestParam String departmentId,@RequestParam String userId,@RequestParam String roleId){
+        System.out.println("societyId = " + societyId);
+        System.out.println("departmentId = " + departmentId);
+        System.out.println("userId = " + userId);
+        Result result = societyDepartmentService.getDepartmentUserDetailsById(societyId,departmentId,userId,roleId);
         return result;
     }
 }

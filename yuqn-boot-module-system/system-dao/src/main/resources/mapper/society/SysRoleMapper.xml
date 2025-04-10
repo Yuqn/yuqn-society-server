@@ -18,15 +18,26 @@
     </resultMap>
 
 
+<!--    <select id="getSocietyRoleUser" resultType="java.lang.String" parameterType="String">-->
+<!--        select sys_user.nick_name-->
+<!--        from society_body_user_role LEFT JOIN sys_user on society_body_user_role.user_id = sys_user.id-->
+<!--        where society_body_user_role.role_id = #{roleId} and society_body_user_role.society_body_id = #{societyId}-->
+<!--    </select>-->
     <select id="getSocietyRoleUser" resultType="java.lang.String" parameterType="String">
-        select sys_user.nick_name
+        select GROUP_CONCAT(sys_user.nick_name SEPARATOR '-') AS 'nick_name'
         from society_body_user_role LEFT JOIN sys_user on society_body_user_role.user_id = sys_user.id
-        where society_body_user_role.role_id = #{roleId} and society_body_user_role.society_body_id = #{societyId}
+        where society_body_user_role.role_id = #{roleId} and society_body_user_role.society_body_id = #{societyId} and society_body_user_role.del_flag = '0'
     </select>
     <select id="getDepartmentMinisterOrBiceMinister" resultType="java.lang.String" parameterType="String">
-        select sys_user.nick_name
+        select GROUP_CONCAT(sys_user.nick_name separator '-') AS 'nick_name'
         from society_department_user_role LEFT JOIN sys_user on society_department_user_role.user_id = sys_user.id
                                           LEFT JOIN sys_role on sys_role.id	= society_department_user_role.role_id
         where society_department_user_role.department_id = #{departmentId} and society_department_user_role.role_id = #{roleId}
+          and society_department_user_role.del_flag = '0'
+    </select>
+    <select id="getSocietyviceChairman" resultType="com.yuqn.vo.UserBodyRole" parameterType="String">
+        select society_body_user_role.user_id,society_body_user_role.society_body_id,sys_user.nick_name
+        from society_body_user_role LEFT JOIN sys_user on society_body_user_role.user_id = sys_user.id
+        where society_body_user_role.society_body_id = #{societyId} and society_body_user_role.role_id = '5'
     </select>
 </mapper>
